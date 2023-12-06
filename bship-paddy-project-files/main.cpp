@@ -52,50 +52,62 @@ initViewer(osgViewer::Viewer &viewer)
 /**
  * Create the game world and underlying scene graph.
  */
-void
-initGameWorld(osgViewer::Viewer &viewer)
-{
-  World *world = World::instance();
+void initGameWorld(osgViewer::Viewer &viewer, const char* luaScriptPath) {
+    World *world = World::instance();
+    viewer.setSceneData(world->getSceneGraph());
+    osg::ref_ptr<Ship> ship = Ship::create();
+    world->addEntity(ship.get());
 
-  /* Attach the scene graph to viewer.  */
-  viewer.setSceneData(world->getSceneGraph());
+    lua_State *L = luaL_newstate();
+    luaL_openlibs(L);
+    lua_register(L, "addBarrier", lua_addBarrier);
 
-  /* Add our space ship to the world.  */
-  osg::ref_ptr<Ship> ship = Ship::create();
-  world->addEntity(ship.get());
+    if (luaL_dofile(L, luaScriptPath) != LUA_OK) {
+        std::cerr << "Error running Lua script: " << lua_tostring(L, -1) << std::endl;
+    }
 
-  // very good advice here:
-  //http://rubenlaguna.com/wp/2012/11/26/first-steps-lua-cplusplus-integration/
-
-  lua_State *L = luaL_newstate();
-
-  //  addBarrier() call below is for demo purposes only
-  //  DELETE next line before handin
-  world->addBarrier(30.0f, 3.0f, 0.0f, -10.0f, -25.0f, 0.0f);  // DELETE ME!!
-
-  lua_close(L);
-
-  /* Set up keboard event handler to controll the ship.  */
-  viewer.addEventHandler(new ShipController(ship.get()));
+    lua_close(L);
+    viewer.addEventHandler(new ShipController(ship.get()));
 }
 
+
+static int lua_addBarrier(lua_State* L) {
+    // Ensure there are exactly 6 arguments
+    if (lua_gettop(L) != 6) {
+        luaL_error(L, "Incorrect number of arguments to addBarrier");
+    }
+
+    float hx = luaL_checknumber(L, 1);
+    float hy = luaL_checknumber(L, 2);
+    float hz = luaL_checknumber(L, 3);
+    float ox = luaL_checknumber(L, 4);
+    float oy = luaL_checknumber(L, 5);
+    float oz = luaL_checknumber(L, 6);
+
+    World::instance()->addBarrier(hx, hy, hz, ox, oy, oz);
+
+    return 0; // Number of return values
+}
 
 /**
  * MAIN
  */
-int
-main(int argc, char *argv[])
-{
-  /* Create and initialise the viewer.  */
-  osgViewer::Viewer viewer;
-  initViewer(viewer);
+int main(int argc, char *argv[]) {
+    osgViewer::Viewer viewer;
+    initViewer(viewer);
 
-  /* Create the scene.  */
-  initGameWorld(viewer);
+    // Check if the Lua script filename is provided
+    if (argc > 1) {
+        initGameWorld(viewer, argv[1]);
+    } else {
+        std::cerr << "Lua script filename not provided." << std::endl;
+        return 1;
+    }
 
-  /* Enter the event processing loop.  */
-  return  viewer.run();
+    return viewer.run();
 }
 
 
 /* vi:set tw=78 sw=4 ts=4 et: */
+
+
