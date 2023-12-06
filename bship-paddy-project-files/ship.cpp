@@ -103,30 +103,28 @@ Ship::getOrientation(void) const
 
 
 
-void
-Ship::onUpdate(double time)
-{
-    double delta = time - _lastFrame;
-    _lastFrame = time;
+void Ship::updateDirection() {
+    float xDirection = 0.0;
+    float yDirection = 0.0;
 
-    /* Get the force vector first.  */
-    osg::Vec3 force(0.0, 0.0, 0.0);
-    if (_engines[LEFT_ENGINE])
-        force += osg::Vec3(1.0, 0.0, 0.0);
-    if (_engines[TOP_ENGINE])
-        force += osg::Vec3(0.0, -1.0, 0.0);
-    if (_engines[RIGHT_ENGINE])
-        force += osg::Vec3(-1.0, 0.0, 0.0);
-    if (_engines[BOTTOM_ENGINE])
-        force += osg::Vec3(0.0, 1.0, 0.0);
-    force *= _power;
+    // Determine direction based on engines (key presses)
+    if (_engines[LEFT_ENGINE]) {
+        xDirection -= 1.0;
+    }
+    if (_engines[RIGHT_ENGINE]) {
+        xDirection += 1.0;
+    }
+    if (_engines[TOP_ENGINE]) {
+        yDirection += 1.0;
+    }
+    if (_engines[BOTTOM_ENGINE]) {
+        yDirection -= 1.0;
+    }
 
-    /* Update ship's position.  */
-    translate(_velocity * delta);
-
-    /* Caluclate ship's new velocity.  */
-    _velocity += force * delta;
-    //printf("VELOCITY: %f %f %f\n", _velocity[0], _velocity[1], _velocity[2]);
+    // Only update angle if there is some directional input
+    if (xDirection != 0.0 || yDirection != 0.0) {
+        _angle = atan2(yDirection, xDirection);
+    }
 }
 
 
@@ -137,18 +135,24 @@ void Ship::setDirection(float angle) {
     updateVelocity();
 }
 
+// This method updates the velocity based on the current angle and speed
 void Ship::updateVelocity() {
-    // Update velocity based on the current angle and speed
     _velocity.set(cos(_angle) * _speed, sin(_angle) * _speed, 0.0);
 }
 
-// Modify the onUpdate method to use the new velocity
 void Ship::onUpdate(double time) {
     double delta = time - _lastFrame;
     _lastFrame = time;
 
-    // Update ship's position based on the new velocity
+    // Update direction and velocity
+    updateDirection();
+    updateVelocity();
+
+    // Move the ship based on its velocity
     translate(_velocity * delta);
+
+    // Check for screen edge wrapping
+    checkAndWrapEdges();
 }
 
 void Ship::increaseSpeed() {
