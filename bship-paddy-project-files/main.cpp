@@ -89,6 +89,15 @@ static int lua_addBarrier(lua_State* L) {
     return 0; // Number of return values
 }
 
+void checkCollisions(World* world, Ship* ship) {
+    osg::BoundingBox shipBox = ship->getBoundingBox();
+    if (world->checkCollision(shipBox)) {
+        // Handle collision
+        // For example, stop the ship
+        ship->setVelocity(osg::Vec3(0, 0, 0));
+    }
+}
+
 /**
  * MAIN
  */
@@ -105,6 +114,13 @@ int main(int argc, char *argv[]) {
     }
 
     return viewer.run();
+
+      while (!viewer.done()) {
+        checkCollisions(world, ship);  // Update game state including collision check
+        viewer.frame();
+    }
+
+    return 0;
 }
 
 

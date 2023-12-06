@@ -16,6 +16,8 @@
 
 #include "ship.h"
 
+ std::vector<osg::ref_ptr<osg::MatrixTransform>> barriers;  // Store barriers
+
 
 Ship::Ship(osg::MatrixTransform *visual):
     Entity(visual), _lastFrame(0.0),
@@ -218,3 +220,6 @@ void Ship::updateVelocity() {
     _velocity.set(cos(_angle) * _speed, sin(_angle) * _speed, 0.0);
 }
 
+osg::BoundingBox getBoundingBox() const {
+    return _visual->getBoundingBox();
+}

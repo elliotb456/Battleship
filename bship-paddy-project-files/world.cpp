@@ -61,6 +61,17 @@ World::addBarrier(float hx, float hy, float hz, float ox, float oy, float oz)
   transform->setMatrix( m );
 
   _root->addChild(transform);
+  
+  barriers.push_back(transform);  // Store the barrier
+}
+
+bool World::checkCollision(const osg::BoundingBox& shipBox) const {
+    for (const auto& barrier : barriers) {
+        if (shipBox.intersects(barrier->getBoundingBox())) {
+            return true;  // Collision detected
+        }
+    }
+    return false;
 }
 
 /* vi:set tw=78 sw=4 ts=4 et: */
