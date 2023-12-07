@@ -4,10 +4,6 @@
  * Copyright (C) 2008 Jacek Rosik <jacek.rosik@ul.ie>
  */
 
-extern "C" {
-#include "lualib.h"
-#include "lauxlib.h"
-}
 
 #include <cstdlib>
 
@@ -24,11 +20,11 @@ extern "C" {
 
 #define WORLD_SIZE                      100.0
 
+
 /**
  * Initialise the display window camera and projections.
  */
-void
-initViewer(osgViewer::Viewer &viewer)
+void initViewer(osgViewer::Viewer &viewer)
 {
     /* This will set up a square window (app runs fullscreen by default).  */
     viewer.setUpViewInWindow(0, 0, WINDOW_SIZE, WINDOW_SIZE);
@@ -49,52 +45,40 @@ initViewer(osgViewer::Viewer &viewer)
     camera->setAllowEventFocus(false);
 }
 
+
 /**
  * Create the game world and underlying scene graph.
  */
-void
-initGameWorld(osgViewer::Viewer &viewer)
+void initGameWorld(osgViewer::Viewer &viewer)
 {
-  World *world = World::instance();
+    World *world = World::instance();
 
-  /* Attach the scene graph to viewer.  */
-  viewer.setSceneData(world->getSceneGraph());
+    /* Attach the scene graph to viewer.  */
+    viewer.setSceneData(world->getSceneGraph());
 
-  /* Add our space ship to the world.  */
-  osg::ref_ptr<Ship> ship = Ship::create();
-  world->addEntity(ship.get());
+    /* Add our space ship to the world.  */
+    osg::ref_ptr<Ship> ship = Ship::create();
+    world->addEntity(ship.get());
 
-  // very good advice here:
-  //http://rubenlaguna.com/wp/2012/11/26/first-steps-lua-cplusplus-integration/
-
-  lua_State *L = luaL_newstate();
-
-  //  addBarrier() call below is for demo purposes only
-  //  DELETE next line before handin
-  world->addBarrier(30.0f, 3.0f, 0.0f, -10.0f, -25.0f, 0.0f);  // DELETE ME!!
-
-  lua_close(L);
-
-  /* Set up keboard event handler to controll the ship.  */
-  viewer.addEventHandler(new ShipController(ship.get()));
+    /* Set up keboard event handler to controll the ship.  */
+    viewer.addEventHandler(new ShipController(ship.get()));
 }
 
 
 /**
  * MAIN
  */
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-  /* Create and initialise the viewer.  */
-  osgViewer::Viewer viewer;
-  initViewer(viewer);
+    /* Create and initialise the viewer.  */
+    osgViewer::Viewer viewer;
+    initViewer(viewer);
 
-  /* Create the scene.  */
-  initGameWorld(viewer);
+    /* Create the scene.  */
+    initGameWorld(viewer);
 
-  /* Enter the event processing loop.  */
-  return  viewer.run();
+    /* Enter the event processing loop.  */
+    return  viewer.run();
 }
 
 

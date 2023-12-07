@@ -50,6 +50,12 @@ ShipController::handle(const osgGA::GUIEventAdapter &event, osgGA::GUIActionAdap
         case osgGA::GUIEventAdapter::KEY_Down:
             _ship->activateEngine(Ship::TOP_ENGINE, activate);
             break;
+        case '+':
+            _ship->increaseSpeed();
+            break;
+        case '-':
+       	    _ship->decreaseSpeed();
+       	    break;
     }
 
     return false;
@@ -57,3 +63,4 @@ ShipController::handle(const osgGA::GUIEventAdapter &event, osgGA::GUIActionAdap
 
 
 /* vi:set tw=78 sw=4 ts=4 et: */
+

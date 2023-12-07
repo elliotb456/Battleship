@@ -40,6 +40,8 @@ public:
     const osg::Vec3 getPosition(void) const;
     double getOrientation(void) const;
 
+    void increaseSpeed();
+    void decreaseSpeed();
 
 protected:
     Ship(osg::MatrixTransform *visual);
@@ -51,8 +53,9 @@ private:
     bool _engines[4];
 
     double _power;
-    osg::Vec3 _velocity;
+    osg::Vec3 _velocity;  
 };
+
 
 
 #endif /* __SHIP_H__ */

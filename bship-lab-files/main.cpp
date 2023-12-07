@@ -24,8 +24,7 @@
 /**
  * Initialise the display window camera and projections.
  */
-void
-initViewer(osgViewer::Viewer &viewer)
+void initViewer(osgViewer::Viewer &viewer)
 {
     /* This will set up a square window (app runs fullscreen by default).  */
     viewer.setUpViewInWindow(0, 0, WINDOW_SIZE, WINDOW_SIZE);
@@ -50,8 +49,7 @@ initViewer(osgViewer::Viewer &viewer)
 /**
  * Create the game world and underlying scene graph.
  */
-void
-initGameWorld(osgViewer::Viewer &viewer)
+void initGameWorld(osgViewer::Viewer &viewer)
 {
     World *world = World::instance();
 
@@ -70,8 +68,7 @@ initGameWorld(osgViewer::Viewer &viewer)
 /**
  * MAIN
  */
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     /* Create and initialise the viewer.  */
     osgViewer::Viewer viewer;
