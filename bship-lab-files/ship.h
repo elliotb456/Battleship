@@ -40,6 +40,8 @@ public:
     const osg::Vec3 getPosition(void) const;
     double getOrientation(void) const;
 
+    void increaseSpeed();
+    void decreaseSpeed();
 
 protected:
     Ship(osg::MatrixTransform *visual);
@@ -51,41 +53,10 @@ private:
     bool _engines[4];
 
     double _power;
-    osg::Vec3 _velocity;
-};
-
-void setDirection(float angle);
-void updateVelocity();
-
-private:
-    float _angle;  // Direction angle of the ship in radians
-    float _speed;  // Speed of the ship
-};
-
-void increaseSpeed();
-void decreaseSpeed();
-
-private:
-    float _maxSpeed;  // Maximum speed of the ship
-    float _acceleration;  // Acceleration rate of the ship
+    osg::Vec3 _velocity;  
 };
 
 
-
-void checkAndWrapEdges();
-
-private:
-    static constexpr float LEFT_EDGE = -50.0;  // Adjust based on your screen/world size
-    static constexpr float RIGHT_EDGE = 50.0;
-    static constexpr float TOP_EDGE = 50.0;
-    static constexpr float BOTTOM_EDGE = -50.0;
-};
-
-
-private:
-    float _maxSpeed;  // Maximum allowed speed of the ship
-    // ... other members ...
-};
 
 #endif /* __SHIP_H__ */
 

@@ -39,11 +39,7 @@ public:
         { return _root.get(); }
 
     void addEntity(Entity *entity);
-    //    void addDrawable(osg::ref_ptr<osg::Geometry> *dr);
 
-    // this really should be taken care of by a call to addEntity() above
-    //   but that requires hte thing being an Entity in teh first place
-    void addBarrier(float hx, float hy, float hz, float ox, float oy, float oz);
 private:
     osg::ref_ptr<osg::Group> _root;
     Entities _entities;

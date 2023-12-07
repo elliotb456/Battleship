@@ -7,9 +7,8 @@ INCLUDE = -I. -I/usr/include/ -I/usr/include/X11/
 INCOSG = -I/usr/include/osg
 
 # LDLIBS = -lm -ldl -lGL -lGLU -lpthread -lXext -lX11
-LDFLAGS =  -L. -L/usr/lib -L/usr/X11R6/lib -L/usr/local/lib -Wl,--copy-dt-needed-entries
-LDOSG = -L/usr/lib64 -losg -losgGA -losgDB -losgViewer -losgSim
-LDLUA = -L/usr/lib64 -llua
+LDFLAGS =  -L. -L/usr/lib -L/usr/X11R6/lib -L/usr/local/lib
+LDOSG = -L/usr/lib64 -losg -losgGA -losgViewer -losgSim
 
 CC = g++
 
@@ -19,7 +18,7 @@ all: $(EXE)
 
 
 $(EXE): $(COBJS)
-	$(CC) -o$(EXE) $(COBJS) $(LDFLAGS) $(LDLIBS) $(LDOSG) $(LDLUA)
+	$(CC) -o$(EXE) $(COBJS) $(LDFLAGS) $(LDLIBS) $(LDOSG)
 
 
 $(COBJS): %.o : %.cpp

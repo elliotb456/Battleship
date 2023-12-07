@@ -7,10 +7,6 @@
 
 #include <osg/Group>
 
-#include <osg/Geometry>		// new
-#include <osg/Geode>		// new
-#include <osg/ShapeDrawable>	// new
-
 #include "entity.h"
 
 #include "world.h"
@@ -25,6 +21,7 @@ World::World(void):
 World::~World(void)
 {
 }
+
 
 /**
  * Add entity to the world.
@@ -41,37 +38,5 @@ World::addEntity(Entity *entity)
     _root->addChild(entity->getVisual());
 }
 
-// http://code.google.com/p/osgworks/source/browse/trunk/tests/shapes/shapes.cpp?r=415
-// and
-// http://osgqsg.googlecode.com/svn-history/r2/trunk/Examples/Picking/PickingMain.cpp
-void
-World::addBarrier(float hx, float hy, float hz, float ox, float oy, float oz)
-{
-  osg::Box * box = new osg::Box();
-  box->setHalfLengths( osg::Vec3(hx, hy, hz) );
-  osg::ShapeDrawable * shape = new osg::ShapeDrawable( box );
-
-  osg::Geode * geode = new osg::Geode();
-  geode->addDrawable( shape );
-
-  osg::MatrixTransform * transform = new osg::MatrixTransform();
-  transform->addChild( geode );
-  osg::Matrix m;
-  m.makeTranslate( ox, oy, oz ); // offset from centre
-  transform->setMatrix( m );
-
-  _root->addChild(transform);
-  
-  barriers.push_back(transform);  // Store the barrier
-}
-
-bool World::checkCollision(const osg::BoundingBox& shipBox) const {
-    for (const auto& barrier : barriers) {
-        if (shipBox.intersects(barrier->getBoundingBox())) {
-            return true;  // Collision detected
-        }
-    }
-    return false;
-}
 
 /* vi:set tw=78 sw=4 ts=4 et: */
